@@ -12,7 +12,6 @@ export const videos = pgTable("videos", {
   userId: uuid("userId").references(() => users.id, { onDelete: "cascade" }),
   description: text("description").notNull(),
   title: varchar("title", { length: 255 }).notNull(),
-  cloudinary480url: varchar("cloudinary480Url", { length: 255 }).notNull(),
   cloudinary720url: varchar("cloudinary720Url", { length: 255 }).notNull(),
   cloudinary1080url: varchar("cloudinary1080Url", { length: 255 }).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),

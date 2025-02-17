@@ -16,6 +16,9 @@ if (fs.existsSync(envFilePath)) {
 const envSchema = Joi.object({
   APP_PORT: Joi.number().required(),
   DATABASE_URL: Joi.string().uri().required(),
+  CLOUDINARY_CLOUD_NAME: Joi.string().required(),
+  CLOUDINARY_API_KEY: Joi.string().required(),
+  CLOUDINARY_API_SECRET: Joi.string().required(),
 });
 
 const { error, value: envVars } = envSchema.validate(process.env);
@@ -27,6 +30,11 @@ if (error) {
 const config = {
   port: envVars.APP_PORT,
   databaseUrl: envVars.DATABASE_URL,
+  cloudinary: {
+    cloudName: envVars.CLOUDINARY_CLOUD_NAME,
+    apiKey: envVars.CLOUDINARY_API_KEY,
+    apiSecret: envVars.CLOUDINARY_API_SECRET,
+  },
 };
 
 export default config;
