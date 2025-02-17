@@ -87,10 +87,44 @@ class VideoService {
     params: PaginationParams
   ): Promise<PaginatedResponse<Video>> {
     try {
+      if (!params.limit || params.limit < 1) {
+        params.limit = 10;
+      }
+
+      params.limit = Math.min(params.limit, 30);
+
+      if (params.cursor) {
+        if (!params.cursor.createdAt || !params.cursor.id) {
+          throw new Error("Invalid cursor format");
+        }
+
+        if (
+          !(params.cursor.createdAt instanceof Date) &&
+          isNaN(new Date(params.cursor.createdAt).getTime())
+        ) {
+          throw new Error("Invalid cursor date format");
+        }
+
+        if (typeof params.cursor.createdAt === "string") {
+          params.cursor.createdAt = new Date(params.cursor.createdAt);
+        }
+      }
+
       const videos = await videoRepository.getVideos(params);
+
+      if (!videos.items) {
+        return {
+          items: [],
+          nextCursor: null,
+        };
+      }
+
       return videos;
     } catch (error) {
-      throw error;
+      if (error instanceof Error) {
+        throw new Error(`Error fetching videos: ${error.message}`);
+      }
+      throw new Error("An unexpected error occurred while fetching videos");
     }
   }
 
@@ -104,15 +138,14 @@ class VideoService {
     }
   }
 
-  public async deleteVideo(id: string): Promise<Video>{
+  public async deleteVideo(id: string): Promise<Video> {
     try {
-        const deletedVideo = await videoRepository.deleteVideo(id)
-        return deletedVideo;
+      const deletedVideo = await videoRepository.deleteVideo(id);
+      return deletedVideo;
     } catch (error) {
-        throw error;
+      throw error;
     }
   }
 }
-
 
 export const videoService = new VideoService();
