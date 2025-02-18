@@ -3,7 +3,7 @@ import ffmpeg from "../config/ffmpegConfig";
 import { NewVideo, Video } from "../interfaces/Video";
 import { videoRepository } from "../repositories/videoRepository";
 import { v2 as cloudinary } from "cloudinary";
-import path, { dirname } from "path";
+import path from "path";
 import { promises as fs } from "fs";
 import {
   PaginatedResponse,
@@ -142,6 +142,15 @@ class VideoService {
     try {
       const deletedVideo = await videoRepository.deleteVideo(id);
       return deletedVideo;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async updateVideo(id: string, videoUpdates: Partial<NewVideo>) {
+    try {
+      const updatedVideo = videoRepository.updateVideo(id, videoUpdates);
+      return updatedVideo;
     } catch (error) {
       throw error;
     }
