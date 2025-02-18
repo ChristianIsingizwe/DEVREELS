@@ -7,8 +7,8 @@ class VideoController {
   async uploadVideo(req: RequestWithFile, res: Response): Promise<void> {
     try {
       if (!req.file) {
-        res.status(400).json({ error: "No video file provided" });
-        return;
+        res.status(400).json({ error: "Video missing" });
+        return 
       }
 
       const { error, value } = videoFieldsSchema.validate(req.body);
@@ -20,7 +20,7 @@ class VideoController {
       const video = await videoService.saveVideo(req.file.path, value);
       res.status(201).json(video);
     } catch (error) {
-      res.status(500).json({ error: "Error uploading video" });
+      res.status(500).json({ error: "Internal server error" });
     }
   }
 

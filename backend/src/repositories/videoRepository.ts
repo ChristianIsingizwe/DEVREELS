@@ -6,12 +6,12 @@ import { Video, NewVideo } from '../interfaces/Video';
 
 
 class VideoRepository {
-    async insertVideo(video: NewVideo){
+    async insertVideo(video: NewVideo): Promise<Video>{
         const newVideo = await db.insert(videos).values(video).returning()
         return newVideo[0];
     }
 
-    async getVideoById(id:string){
+    async getVideoById(id:string): Promise<Video | undefined>{
         const video = await db.query.videos.findFirst({
             where: eq(videos.id, id)
         })
@@ -46,13 +46,13 @@ class VideoRepository {
         };
     }
 
-    async deleteVideo(id: string){
+    async deleteVideo(id: string): Promise<Video>{
         const deletedVideo = await db.delete(videos).where(eq(videos.id, id)).returning(); 
         return deletedVideo[0]
     }
 
 
-    async updateVideo(id: string, video: Partial<NewVideo>){
+    async updateVideo(id: string, video: Partial<NewVideo>): Promise<Video>{
         const updatedVideo = await db.update(videos).set(video).where(eq(videos.id, id)).returning();
         return updatedVideo[0];
     }

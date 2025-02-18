@@ -147,7 +147,7 @@ class VideoService {
     }
   }
 
-  public async updateVideo(id: string, videoUpdates: Partial<NewVideo>) {
+  public async updateVideo(id: string, videoUpdates: Partial<Video>) {
     try {
       const updatedVideo = await videoRepository.updateVideo(id, videoUpdates);
       return updatedVideo;
