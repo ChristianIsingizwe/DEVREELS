@@ -4,15 +4,17 @@ import { RequestWithFile } from '../interfaces/RequestWithFile';
 import videoFieldsSchema from '../joiSchemas/videoSchema';
 
 class VideoController {
-    async uploadVideo(req: RequestWithFile, res: Response) {
+    async uploadVideo(req: RequestWithFile, res: Response): Promise<void> {
         try {
             if (!req.file) {
-                return res.status(400).json({ error: 'No video file provided' });
+                res.status(400).json({ error: 'No video file provided' });
+                return;
             }
 
             const { error, value } = videoFieldsSchema.validate(req.body);
             if (error) {
-                return res.status(400).json({ error: error.details[0].message });
+                res.status(400).json({ error: error.details[0].message });
+                return;
             }
 
             const video = await videoService.saveVideo(req.file.path, value);
@@ -22,7 +24,7 @@ class VideoController {
         }
     }
 
-    async getVideos(req: Request, res: Response) {
+    async getVideos(req: Request, res: Response): Promise<void> {
         try {
             const limit = parseInt(req.query.limit as string) || 10;
             const cursor = req.query.cursor ? JSON.parse(req.query.cursor as string) : undefined;
@@ -34,7 +36,7 @@ class VideoController {
         }
     }
 
-    async getVideo(req: Request, res: Response) {
+    async getVideo(req: Request, res: Response): Promise<void> {
         try {
             const video = await videoService.getVideoById(req.params.id);
             res.json(video);
@@ -43,11 +45,12 @@ class VideoController {
         }
     }
 
-    async updateVideo(req: Request, res: Response) {
+    async updateVideo(req: Request, res: Response): Promise<void> {
         try {
             const { error, value } = videoFieldsSchema.validate(req.body);
             if (error) {
-                return res.status(400).json({ error: error.details[0].message });
+                res.status(400).json({ error: error.details[0].message });
+                return;
             }
 
             const video = await videoService.updateVideo(req.params.id, value);
@@ -57,7 +60,7 @@ class VideoController {
         }
     }
 
-    async deleteVideo(req: Request, res: Response) {
+    async deleteVideo(req: Request, res: Response): Promise<void> {
         try {
             const video = await videoService.deleteVideo(req.params.id);
             res.json(video);
