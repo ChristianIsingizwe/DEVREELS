@@ -149,7 +149,7 @@ class VideoService {
 
   public async updateVideo(id: string, videoUpdates: Partial<NewVideo>) {
     try {
-      const updatedVideo = videoRepository.updateVideo(id, videoUpdates);
+      const updatedVideo = await videoRepository.updateVideo(id, videoUpdates);
       return updatedVideo;
     } catch (error) {
       throw error;
