@@ -12,11 +12,13 @@
   "dependencies": {
     "@tailwindcss/postcss": "^4.0.6",
     "@tanstack/react-query": "^5.66.6",
+    "axios": "^1.7.9",
     "lucide-react": "^0.475.0",
     "postcss": "^8.5.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.5",
+    "react-video-js-player": "^1.1.1",
     "tailwindcss": "^4.0.6",
     "zustand": "^5.0.3"
   },

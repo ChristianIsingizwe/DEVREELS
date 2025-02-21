@@ -1,8 +1,8 @@
-import SearchBar from "./components/SearchBar"
+import SideBar from "./components/SideBar"
 
 function App() {
   return <div>
-    <SearchBar />
+    <SideBar />
   </div>
 }
 

@@ -3,3 +3,9 @@
 body{
   background-color:  #121212;
 }
+
+@layer utilities {
+  input[type="search"]::-webkit-search-cancel-button {
+    display: none;
+  }
+}
