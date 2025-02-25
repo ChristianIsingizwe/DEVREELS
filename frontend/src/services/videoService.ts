@@ -1,31 +1,30 @@
-import apiClient from "../clients/appApiClient";
+import axiosInstance from "../clients/apiClient";
 
-class VideoService {
-  async getVideos(params: { limit: number; cursor?: string }) {
-    const response = await apiClient.get("/videos", { params });
-    return response.data;
-  }
-
-  async getVideo(id: string) {
-    const response = await apiClient.get(`/videos/${id}`);
-    return response.data;
-  }
-
-  async deleteVideo(id: string) {
-    const response = await apiClient.delete(`/videos/delete/${id}`);
-    return response.data;
-  }
-
-  async uploadVideo(formData: FormData) {
-    const response = await apiClient.post("/videos/upload", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    return response.data;
-  }
+export interface Video {
+  id: string;
+  title: string;
+  description: string;
+  cloudinary720pUrl: string;
+  cloudinary1080pUrl: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-const videoService = new VideoService();
-export default videoService;
+const fetchVideos = async ({
+  pageParam = 1,
+}): Promise<{ videos: Video[]; nextPage?: number }> => {
+  const response = await axiosInstance.get(`/videos?.page=${pageParam}`);
+  return response.data;
+};
+
+const uploadVideo = async (videoData: FormData): Promise<Video> => {
+  const response = await axiosInstance.post(`/videos`, videoData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response.data;
+};
+
+export { fetchVideos, uploadVideo };

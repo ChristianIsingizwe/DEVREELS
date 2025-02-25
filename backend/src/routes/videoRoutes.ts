@@ -28,10 +28,10 @@ const upload = multer({
   },
 });
 
-router.post("/", upload.single("video"), videoController.uploadVideo);
+router.post("/upload", upload.single("video"), videoController.uploadVideo);
 router.get("/", videoController.getVideos);
 router.get("/:id", videoController.getVideo);
-router.put("/:id", videoController.updateVideo);
-router.delete("/:id", videoController.deleteVideo);
+router.put("/update/:id", videoController.updateVideo);
+router.delete("/delete/:id", videoController.deleteVideo);
 
 export default router;
