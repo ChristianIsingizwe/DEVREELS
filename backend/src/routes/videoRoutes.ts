@@ -13,11 +13,17 @@ const storage = multer.diskStorage({
   },
 });
 
+const allowedVideoTypes = [
+  "video/mp4",
+  "video/quicktime",
+  "video/webm",
+  "video/x-matroska",
+];
+
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ["video/mp4", "video/quicktime"];
-    if (!allowedTypes.includes(file.mimetype)) {
+    if (!allowedVideoTypes.includes(file.mimetype)) {
       cb(new Error("Invalid file type"));
       return;
     }

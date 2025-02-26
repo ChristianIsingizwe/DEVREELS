@@ -8,7 +8,6 @@ declare module 'react-video-js-player' {
       width?: number | string;
       height?: number | string;
       controls?: boolean;
-      // Callback when the underlying video.js player instance is ready.
       onReady?: (player: videojs.Player) => void;
     }
   
