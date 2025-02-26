@@ -15,7 +15,7 @@ export const videos = pgTable("videos", {
   cloudinary720url: varchar("cloudinary720Url", { length: 255 }).notNull(),
   cloudinary1080url: varchar("cloudinary1080Url", { length: 255 }).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updateAt: timestamp("timestamp").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
 
 export const users = pgTable("users", {
@@ -39,7 +39,7 @@ export const comments = pgTable("comments", {
   videoId: uuid("videoId")
     .references(() => videos.id, { onDelete: "cascade" })
     .notNull(),
-  comment: text("comment").notNull(),
+  content: text("content").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });

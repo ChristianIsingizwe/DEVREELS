@@ -5,7 +5,7 @@ export interface Video{
     cloudinary720url: string;
     cloudinary1080url: string;
     createdAt: Date;
-    updateAt: Date;
+    updatedAt: Date;
 }
 
 export type NewVideo = Omit<Video, 'id' | 'createdAt' | 'updateAt'>

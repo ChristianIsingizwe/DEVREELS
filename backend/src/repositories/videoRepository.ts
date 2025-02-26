@@ -1,5 +1,5 @@
 import { eq, and, desc, lte, } from 'drizzle-orm';
-import {db} from '../db'
+import db from '../db';
 import { videos } from '../db/schemas'
 import { PaginatedResponse, PaginationParams } from '../interfaces/PaginationParams';
 import { Video, NewVideo } from '../interfaces/Video';
