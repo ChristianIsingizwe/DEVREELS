@@ -16,9 +16,7 @@ const VideoList: React.FC = () => {
   const lastVideoRef = useCallback(
     (node: HTMLDivElement) => {
       if (isFetchingNextPage) return;
-
       if (observerRef.current) observerRef.current.disconnect();
-
       observerRef.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasNextPage) {
           fetchNextPage();
@@ -30,7 +28,14 @@ const VideoList: React.FC = () => {
   );
 
   if (status === "pending") return <div>Loading</div>;
-  if (status == "error") return <div> Error: {(error as Error).message}</div>;
+  if (status === "error") return <div>Error: {(error as Error).message}</div>;
+
+  const hasVideos = data?.pages.some((page) => page.items.length > 0);
+
+  if (!hasVideos) {
+    return <div>No videos available</div>;
+  }
+
   return (
     <div>
       {data?.pages.map((page, pageIndex) => (

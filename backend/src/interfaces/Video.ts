@@ -8,4 +8,4 @@ export interface Video{
     updatedAt: Date;
 }
 
-export type NewVideo = Omit<Video, 'id' | 'createdAt' | 'updateAt'>
+export type NewVideo = Omit<Video, 'id' | 'createdAt' | 'updatedAt'>

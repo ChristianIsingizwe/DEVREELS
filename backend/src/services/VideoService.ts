@@ -1,7 +1,7 @@
 import config from "../config/config";
 import ffmpeg from "../config/ffmpegConfig";
 import { NewVideo, Video } from "../interfaces/Video";
-import { videoRepository } from "../repositories/videoRepository";
+import { videoRepository } from "../repositories/VideoRepository";
 import { v2 as cloudinary } from "cloudinary";
 import path from "path";
 import { promises as fs } from "fs";

@@ -1,9 +1,7 @@
-import SideBar from "./components/SideBar"
+import VideoList from "./components/VideoList";
 
-function App() {
-  return <div>
-    <SideBar />
-  </div>
-}
+const App = () => {
+  return <VideoList />;
+};
 
-export default App
+export default App;
