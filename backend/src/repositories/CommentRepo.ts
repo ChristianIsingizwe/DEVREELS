@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import db from "../db";
 import { comments } from "../db/schemas";
 import { NewComment, Comment, updatableComment } from "../interfaces/Comment";
+import { PaginationParams } from "../interfaces/PaginationParams";
 
 class CommentRepository {
   public async insertComment(comment: NewComment): Promise<Comment> {
@@ -17,7 +18,7 @@ class CommentRepository {
     }
   }
 
-  public async getCommentsByVideoId(videoId: string): Promise<Comment[]> {
+  public async getCommentsByVideoId(videoId: string, params: PaginationParams): Promise<Comment[]> {
     try {
       const videoComments = await db
         .select()
