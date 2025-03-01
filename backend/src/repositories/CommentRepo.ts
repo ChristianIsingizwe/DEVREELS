@@ -1,8 +1,11 @@
-import { eq } from "drizzle-orm";
+import { and, eq, lte } from "drizzle-orm";
 import db from "../db";
 import { comments } from "../db/schemas";
 import { NewComment, Comment, updatableComment } from "../interfaces/Comment";
-import { PaginationParams } from "../interfaces/PaginationParams";
+import {
+  PaginatedResponse,
+  PaginationParams,
+} from "../interfaces/PaginationParams";
 
 class CommentRepository {
   public async insertComment(comment: NewComment): Promise<Comment> {
@@ -18,17 +21,41 @@ class CommentRepository {
     }
   }
 
-  public async getCommentsByVideoId(videoId: string, params: PaginationParams): Promise<Comment[]> {
-    try {
-      const videoComments = await db
-        .select()
-        .from(comments)
-        .where(eq(comments.videoId, videoId))
-        .orderBy(comments.createdAt);
-      return videoComments;
-    } catch (error) {
-      throw error;
-    }
+  public async getCommentsByVideoId(
+    videoId: string,
+    params: PaginationParams
+  ): Promise<PaginatedResponse<Comment>> {
+    const limit = Math.min(params.limit, 30);
+
+    const conditions = params.cursor
+      ? and(
+          eq(comments.videoId, videoId),
+          lte(comments.createdAt, params.cursor.createdAt),
+          lte(comments.id, params.cursor.id)
+        )
+      : eq(comments.videoId, videoId);
+
+    const query = db
+      .select()
+      .from(comments)
+      .where(conditions)
+      .orderBy(comments.createdAt)
+      .limit(limit + 1);
+
+    const items = query;
+    const hasMore = (await items).length > limit;
+
+    const results = hasMore ? (await items).slice(0, -1) : await items;
+
+    return {
+      items: results,
+      nextCursor: hasMore
+        ? {
+            createdAt: results[results.length - 1].createdAt,
+            id: results[results.length - 1].id,
+          }
+        : null,
+    };
   }
 
   public async getCommentsByUserId(userId: string): Promise<Comment[]> {
