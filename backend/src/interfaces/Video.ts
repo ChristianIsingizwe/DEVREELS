@@ -4,9 +4,8 @@ export interface Video{
     title: string;
     cloudinary720url: string;
     cloudinary1080url: string;
-    likeCount: number; 
     createdAt: Date;
     updatedAt: Date;
 }
 
-export type NewVideo = Omit<Video, 'id' | 'createdAt' | 'updatedAt'| 'likeCount'>; 
+export type NewVideo = Omit<Video, 'id' | 'createdAt' | 'updatedAt'>; 

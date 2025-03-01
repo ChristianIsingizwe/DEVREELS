@@ -14,7 +14,6 @@ export const videos = pgTable("videos", {
   title: varchar("title", { length: 255 }).notNull(),
   cloudinary720url: varchar("cloudinary720Url", { length: 255 }).notNull(),
   cloudinary1080url: varchar("cloudinary1080Url", { length: 255 }).notNull(),
-  likeCount: integer("likeCount").default(0),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
