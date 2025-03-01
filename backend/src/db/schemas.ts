@@ -14,6 +14,7 @@ export const videos = pgTable("videos", {
   title: varchar("title", { length: 255 }).notNull(),
   cloudinary720url: varchar("cloudinary720Url", { length: 255 }).notNull(),
   cloudinary1080url: varchar("cloudinary1080Url", { length: 255 }).notNull(),
+  likesCount: integer("likesCount").default(0),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
@@ -44,16 +45,12 @@ export const comments = pgTable("comments", {
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
 
-export const likes = pgTable(
-  "likes",
-  {
-    userId: uuid("userId")
-      .references(() => users.id, { onDelete: "cascade" })
-      .notNull(),
-    videoId: uuid("videoId")
-      .references(() => videos.id, { onDelete: "cascade" })
-      .notNull(),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-  }
-);
-  
+export const likes = pgTable("likes", {
+  userId: uuid("userId")
+    .references(() => users.id, { onDelete: "cascade" })
+    .primaryKey(),
+  videoId: uuid("videoId")
+    .references(() => videos.id, { onDelete: "cascade" })
+    .primaryKey(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
