@@ -5,6 +5,7 @@ import {
   uuid,
   varchar,
   integer,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 
 export const videos = pgTable("videos", {
@@ -44,13 +45,16 @@ export const comments = pgTable("comments", {
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
 
-export const likes = pgTable("likes", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("userId")
-    .references(() => users.id, { onDelete: "cascade" })
-    .notNull(),
-  videoId: uuid("videoId")
-    .references(() => videos.id, { onDelete: "cascade" })
-    .notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
+export const likes = pgTable(
+  "likes",
+  {
+    userId: uuid("userId")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    videoId: uuid("videoId")
+      .references(() => videos.id, { onDelete: "cascade" })
+      .notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  }
+);
+  
