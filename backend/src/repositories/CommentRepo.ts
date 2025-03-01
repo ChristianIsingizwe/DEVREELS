@@ -1,4 +1,4 @@
-import { and, eq, lte } from "drizzle-orm";
+import { and, desc, eq, lt, lte, or } from "drizzle-orm";
 import db from "../db";
 import { comments } from "../db/schemas";
 import { NewComment, Comment, updatableComment } from "../interfaces/Comment";
@@ -25,47 +25,87 @@ class CommentRepository {
     videoId: string,
     params: PaginationParams
   ): Promise<PaginatedResponse<Comment>> {
-    const limit = Math.min(params.limit, 30);
-
-    const conditions = params.cursor
-      ? and(
-          eq(comments.videoId, videoId),
-          lte(comments.createdAt, params.cursor.createdAt),
-          lte(comments.id, params.cursor.id)
-        )
-      : eq(comments.videoId, videoId);
-
-    const query = db
-      .select()
-      .from(comments)
-      .where(conditions)
-      .orderBy(comments.createdAt)
-      .limit(limit + 1);
-
-    const items = query;
-    const hasMore = (await items).length > limit;
-
-    const results = hasMore ? (await items).slice(0, -1) : await items;
-
-    return {
-      items: results,
-      nextCursor: hasMore
-        ? {
-            createdAt: results[results.length - 1].createdAt,
-            id: results[results.length - 1].id,
-          }
-        : null,
-    };
-  }
-
-  public async getCommentsByUserId(userId: string): Promise<Comment[]> {
     try {
-      const userComments = await db
+      const limit = Math.min(params.limit, 30);
+
+      const conditions = params.cursor
+        ? and(
+            eq(comments.videoId, videoId),
+            or(
+              lt(comments.createdAt, params.cursor.createdAt),
+              and(
+                eq(comments.createdAt, params.cursor.createdAt),
+                lt(comments.id, params.cursor.id)
+              )
+            )
+          )
+        : eq(comments.videoId, videoId);
+
+      const query = db
         .select()
         .from(comments)
-        .where(eq(comments.userId, userId))
-        .orderBy(comments.createdAt);
-      return userComments;
+        .where(conditions)
+        .orderBy(desc(comments.createdAt), desc(comments.id))
+        .limit(limit + 1);
+
+      const fetchedComments = await query;
+      const hasMore = fetchedComments.length > limit;
+      const results = hasMore ? fetchedComments.slice(0, -1) : fetchedComments;
+
+      return {
+        items: results,
+        nextCursor: hasMore
+          ? {
+              createdAt: results[results.length - 1].createdAt,
+              id: results[results.length - 1].id,
+            }
+          : null,
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  public async getCommentsByUserId(
+    userId: string,
+    params: PaginationParams
+  ): Promise<PaginatedResponse<Comment>> {
+    try {
+      const limit = Math.min(params.limit, 30);
+
+      const conditions = params.cursor
+        ? and(
+            eq(comments.userId, userId),
+            or(
+              lt(comments.createdAt, params.cursor.createdAt),
+              and(
+                eq(comments.createdAt, params.cursor.createdAt),
+                lt(comments.id, params.cursor.id)
+              )
+            )
+          )
+        : eq(comments.userId, userId);
+
+      const query = db
+        .select()
+        .from(comments)
+        .where(conditions)
+        .orderBy(desc(comments.createdAt), desc(comments.id))
+        .limit(limit + 1);
+
+      const fetchedComments = await query;
+      const hasMore = fetchedComments.length > limit;
+      const results = hasMore ? fetchedComments.slice(0, -1) : fetchedComments;
+
+      return {
+        items: results,
+        nextCursor: hasMore
+          ? {
+              createdAt: results[results.length - 1].createdAt,
+              id: results[results.length - 1].id,
+            }
+          : null,
+      };
     } catch (error) {
       throw error;
     }
