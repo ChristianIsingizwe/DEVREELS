@@ -7,7 +7,6 @@ class CommentService {
     try {
       return await commentRepository.insertComment(comment);
     } catch (error) {
-      // You might want to log the error here.
       throw new Error("Error creating comment");
     }
   }
